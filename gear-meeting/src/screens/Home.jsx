@@ -70,12 +70,12 @@ Modal.Background = styled.View`
   height: ${({ windowHeight }) => windowHeight}px;
   display: flex;
   align-items: flex-end;
-  z-index: 2;
+  z-index: 4;
 `
 
 Modal.Button = styled.TouchableOpacity`
   width: 100%;
-  height: 35px;
+  height: 30px;
   background-color: #d9d9d930;
   border-radius: 10px;
   display: flex;
@@ -86,7 +86,7 @@ Modal.Button = styled.TouchableOpacity`
 
 Modal.Text = styled.Text`
   color: white;
-  font-size: 20px;
+  font-size: 14px;
 `
 
 const ContainerHome = styled.View`
@@ -111,7 +111,7 @@ export default function Home() {
 
   const handleLogout = () => {
     signOut()
-    
+
   }
 
   return (
@@ -120,17 +120,17 @@ export default function Home() {
       <HeaderImage source={headerHome} alt='Cars at a parking' />
       {userModal === true ? (
         <Modal.Background windowHeight={windowHeight}>
-          <LinearGradient 
-            colors={['#040D29', '#1400FF']} 
+          <LinearGradient
+            colors={['#000', '#040D29']}
             style={
-              { 
+              {
                 width: 200,
                 right: 5,
                 marginTop: 52,
                 height: 300,
                 borderRadius: 10,
                 padding: 10,
-                zIndex: 2
+                zIndex: 4
               }
             }
           >
@@ -153,7 +153,7 @@ export default function Home() {
             </Modal.Button>
           </LinearGradient>
         </Modal.Background >
-      ): null
+      ) : null
       }
       <Header>
         <LogotypeImage source={logotype} alt='Logotype Gear Meeting' />
@@ -164,10 +164,10 @@ export default function Home() {
         </UserView>
       </Header>
 
-      <LinearGradient 
-        colors={['#1400FF', '#17949C']} 
+      <LinearGradient
+        colors={['#1400FF', '#17949C']}
         style={
-          { 
+          {
             width: '100%',
             marginTop: 210,
             flex: 1,

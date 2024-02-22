@@ -153,14 +153,15 @@ const Login = ({ navigation }) => {
 
   const handleLogin = () => {
     API.login(email, password, (err, data) => {
-      if(err) {
+      if (err) {
+        console.log("ERROR2: ", err);
         setLoginError(true)
         return console.log(err);
       }
 
       const token = data.data.token
       console.log('TOKEN: ', token)
-      if(token) {
+      if (token) {
         signIn(token)
         navigation.navigate('PrivateRoutes')
       }
@@ -173,12 +174,12 @@ const Login = ({ navigation }) => {
 
   return (
     <Container>
-      <LinearGradient colors={['#1400FF', '#17949C']} style={{ flex: 1, alignItems: 'center'}}>
-        <GearImage source={gear} alt=''/>
-        <CircuitoImage source={circuit} alt=''/>
-        
+      <LinearGradient colors={['#1400FF', '#17949C']} style={{ flex: 1, alignItems: 'center' }}>
+        <GearImage source={gear} alt='' />
+        <CircuitoImage source={circuit} alt='' />
+
         <Content>
-          <Image source={logotype} alt=''/>
+          <Image source={logotype} alt='' />
           <Subtitle>Onde tudo se encontra</Subtitle>
         </Content>
 
@@ -195,7 +196,7 @@ const Login = ({ navigation }) => {
                   setEmail(text)
                 }}
               />
-    
+
               <ContainerLogin.LabelError>* password</ContainerLogin.LabelError>
               <ContainerLogin.InputError
                 placeholder={"************"}
@@ -221,7 +222,7 @@ const Login = ({ navigation }) => {
                 value={email}
                 onChangeText={(text) => setEmail(text)}
               />
-    
+
               <ContainerLogin.Label>password</ContainerLogin.Label>
               <ContainerLogin.Input
                 placeholder={"************"}
