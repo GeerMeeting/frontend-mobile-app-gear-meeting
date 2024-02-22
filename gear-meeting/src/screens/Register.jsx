@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, Touchable, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import logotype from '../../assets/logotipo.png'
 import gear from '../../assets/gear.png'
 import circuit from '../../assets/circuit.png'
@@ -51,10 +51,29 @@ ContainerRegister.Label = styled.Text`
   font-size: 14px;
 `
 
+ContainerRegister.LabelError = styled.Text`
+  padding-left: 10px;
+  padding-right: 10px;
+  color: red;
+  font-size: 14px;
+`
+
 ContainerRegister.Input = styled.TextInput`
   width: 100%;
   height: 30px;
   background-color: #ffffffb1;
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 14px;
+`
+
+ContainerRegister.InputError = styled.TextInput`
+  width: 100%;
+  height: 30px;
+  background-color: #ffffffb1;
+  border: 1px;
+  border-color: red;
   border-radius: 20px;
   padding-left: 10px;
   padding-right: 10px;
@@ -73,6 +92,15 @@ ContainerRegister.Button = styled.TouchableOpacity`
   width: 175px;
   height: 52px;
   background-color: #040D29;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+`
+
+ContainerRegister.ButtonError = styled.View`
+  width: 175px;
+  height: 52px;
+  background-color: #a8a8a8;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
@@ -119,6 +147,7 @@ const Register = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [telephone, setTelephone] = useState('');
+  const [registerError, setRegisterError] = useState(false);
 
   const handleRegister = async () => {
     const body = {
@@ -129,11 +158,11 @@ const Register = ({ navigation }) => {
       confirmPassword
     }
 
-    await API.post('/register', body, (err, data) => {
+    await API.post('/register', body, (err, _) => {
       if(err) {
-        console.error(err);
-      }
-      if(data) {
+        setRegisterError(true)
+        return console.error(err);
+      } else {
         navigation.navigate('Login')
       }
     })
@@ -155,51 +184,115 @@ const Register = ({ navigation }) => {
         </Content>
 
         <ContainerRegister>
-          <ContainerRegister.Label>email</ContainerRegister.Label>
-          <ContainerRegister.Input
-            placeholder={"exemple@mail.com"}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+          {registerError === true ? (
+            <>
+              <ContainerRegister.LabelError>* email</ContainerRegister.LabelError>
+              <ContainerRegister.InputError
+                placeholder={"exemple@mail.com"}
+                value={email}
+                onChangeText={(text) => { 
+                  setRegisterError(false)
+                  setEmail(text) 
+                }}
+              />
 
-          <ContainerRegister.Label>nome completo</ContainerRegister.Label>
-          <ContainerRegister.Input
-            placeholder={"exemple@mail.com"}
-            value={name}
-            onChangeText={(text) => setName(text)}
-          />
+              <ContainerRegister.LabelError>* nome completo</ContainerRegister.LabelError>
+              <ContainerRegister.InputError
+                placeholder={"exemple@mail.com"}
+                value={name}
+                onChangeText={(text) => { 
+                  setRegisterError(false)
+                  setName(text) 
+                }}
+              />
 
-          <ContainerRegister.Label>senha</ContainerRegister.Label>
-          <ContainerRegister.Input
-            placeholder={"Asd1xjw@!1"}
-            value={password}
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-          />
+              <ContainerRegister.LabelError>* senha</ContainerRegister.LabelError>
+              <ContainerRegister.InputError
+                placeholder={"Asd1xjw@!1"}
+                value={password}
+                secureTextEntry={true}
+                onChangeText={(text) => { 
+                  setRegisterError(false)
+                  setPassword(text) 
+                }}
+              />
 
-          <ContainerRegister.Label>confirma senha</ContainerRegister.Label>
-          <ContainerRegister.Input
-            placeholder={"************"}
-            value={confirmPassword}
-            secureTextEntry={true}
-            onChangeText={(text) => setConfirmPassword(text)}
-          />
+              <ContainerRegister.LabelError>* confirma senha</ContainerRegister.LabelError>
+              <ContainerRegister.InputError
+                placeholder={"************"}
+                value={confirmPassword}
+                secureTextEntry={true}
+                onChangeText={(text) => { 
+                  setRegisterError(false)
+                  setConfirmPassword(text) 
+                }}
+              />
 
-          <ContainerRegister.Label>celular</ContainerRegister.Label>
-          <ContainerRegister.Input
-            placeholder={"(99) 99999-9999"}
-            value={telephone}
-            keyboardType="phone-pad"
-            onChangeText={(text) => setTelephone(text)}
-          />
+              <ContainerRegister.LabelError>* celular</ContainerRegister.LabelError>
+              <ContainerRegister.InputError
+                placeholder={"(99) 99999-9999"}
+                value={telephone}
+                keyboardType="phone-pad"
+                onChangeText={(text) => { 
+                  setTelephone(text) 
+                }}
+              />
 
-          <ContainerRegister.ViewButton>
-            <ContainerRegister.Button
-              onPress={handleRegister}
-            >
-              <ContainerRegister.ButtonText>CADASTRAR</ContainerRegister.ButtonText>
-            </ContainerRegister.Button>
-          </ContainerRegister.ViewButton>
+              <ContainerRegister.ViewButton>
+                <ContainerRegister.ButtonError>
+                  <ContainerRegister.ButtonText>CADASTRAR</ContainerRegister.ButtonText>
+                </ContainerRegister.ButtonError>
+              </ContainerRegister.ViewButton>
+            </>
+          ) : (
+            <>
+              <ContainerRegister.Label>email</ContainerRegister.Label>
+              <ContainerRegister.Input
+                placeholder={"exemple@mail.com"}
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+
+              <ContainerRegister.Label>nome completo</ContainerRegister.Label>
+              <ContainerRegister.Input
+                placeholder={"exemple@mail.com"}
+                value={name}
+                onChangeText={(text) => setName(text)}
+              />
+
+              <ContainerRegister.Label>senha</ContainerRegister.Label>
+              <ContainerRegister.Input
+                placeholder={"Asd1xjw@!1"}
+                value={password}
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
+              />
+
+              <ContainerRegister.Label>confirma senha</ContainerRegister.Label>
+              <ContainerRegister.Input
+                placeholder={"************"}
+                value={confirmPassword}
+                secureTextEntry={true}
+                onChangeText={(text) => setConfirmPassword(text)}
+              />
+
+              <ContainerRegister.Label>celular</ContainerRegister.Label>
+              <ContainerRegister.Input
+                placeholder={"(99) 99999-9999"}
+                value={telephone}
+                keyboardType="phone-pad"
+                onChangeText={(text) => setTelephone(text)}
+              />
+
+              <ContainerRegister.ViewButton>
+                <ContainerRegister.Button
+                  onPress={handleRegister}
+                >
+                  <ContainerRegister.ButtonText>CADASTRAR</ContainerRegister.ButtonText>
+                </ContainerRegister.Button>
+              </ContainerRegister.ViewButton>
+            </>
+          )}
 
           <ContainerRegister.ViewCadastro>
             <ContainerRegister.TextCadastro>Já tem uma conta?</ContainerRegister.TextCadastro>

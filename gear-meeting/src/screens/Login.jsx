@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Image, Touchable, TouchableOpacity } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import logotype from '../../assets/logotipo.png'
 import gear from '../../assets/gear.png'
 import circuit from '../../assets/circuit.png'
 import API from '../services/APIService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../hooks/AuthProvider';
 
 // ================================
@@ -54,10 +53,30 @@ ContainerLogin.Label = styled.Text`
   font-size: 14px;
 `
 
+ContainerLogin.LabelError = styled.Text`
+  padding-left: 10px;
+  padding-right: 10px;
+  color: red;
+  font-size: 14px;
+`
+
+
 ContainerLogin.Input = styled.TextInput`
   width: 100%;
   height: 30px;
   background-color: #ffffffb1;
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 36px;
+`
+
+ContainerLogin.InputError = styled.TextInput`
+  width: 100%;
+  height: 30px;
+  background-color: #ffffffb1;
+  border: 1px;
+  border-color: red;
   border-radius: 20px;
   padding-left: 10px;
   padding-right: 10px;
@@ -76,6 +95,15 @@ ContainerLogin.Button = styled.TouchableOpacity`
   width: 175px;
   height: 52px;
   background-color: #040D29;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+`
+
+ContainerLogin.ButtonError = styled.View`
+  width: 175px;
+  height: 52px;
+  background-color: #a8a8a8;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
@@ -119,13 +147,14 @@ const TextFooter = styled.Text`
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState(false);
 
   const { signIn } = useAuth();
 
   const handleLogin = () => {
     API.login(email, password, (err, data) => {
       if(err) {
-        console.log(`entrei aqui`)
+        setLoginError(true)
         return console.log(err);
       }
 
@@ -153,29 +182,64 @@ const Login = ({ navigation }) => {
           <Subtitle>Onde tudo se encontra</Subtitle>
         </Content>
 
+
         <ContainerLogin>
-          <ContainerLogin.Label>email</ContainerLogin.Label>
-          <ContainerLogin.Input
-            placeholder={"exemple@mail.com"}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
+          {loginError === true ? (
+            <>
+              <ContainerLogin.LabelError>* email</ContainerLogin.LabelError>
+              <ContainerLogin.InputError
+                placeholder={"exemple@mail.com"}
+                value={email}
+                onChangeText={(text) => {
+                  setLoginError(false)
+                  setEmail(text)
+                }}
+              />
+    
+              <ContainerLogin.LabelError>* password</ContainerLogin.LabelError>
+              <ContainerLogin.InputError
+                placeholder={"************"}
+                value={password}
+                secureTextEntry={true}
+                onChangeText={(text) => {
+                  setLoginError(false)
+                  setPassword(text)
+                }}
+              />
 
-          <ContainerLogin.Label>password</ContainerLogin.Label>
-          <ContainerLogin.Input
-            placeholder={"************"}
-            value={password}
-            secureTextEntry={true}
-            onChangeText={(text) => setPassword(text)}
-          />
+              <ContainerLogin.ViewButton>
+                <ContainerLogin.ButtonError>
+                  <ContainerLogin.ButtonText>LOGIN</ContainerLogin.ButtonText>
+                </ContainerLogin.ButtonError>
+              </ContainerLogin.ViewButton>
+            </>
+          ) : (
+            <>
+              <ContainerLogin.Label>email</ContainerLogin.Label>
+              <ContainerLogin.Input
+                placeholder={"exemple@mail.com"}
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+    
+              <ContainerLogin.Label>password</ContainerLogin.Label>
+              <ContainerLogin.Input
+                placeholder={"************"}
+                value={password}
+                secureTextEntry={true}
+                onChangeText={(text) => setPassword(text)}
+              />
 
-          <ContainerLogin.ViewButton>
-            <ContainerLogin.Button
-              onPress={handleLogin}
-            >
-              <ContainerLogin.ButtonText>LOGIN</ContainerLogin.ButtonText>
-            </ContainerLogin.Button>
-          </ContainerLogin.ViewButton>
+              <ContainerLogin.ViewButton>
+                <ContainerLogin.Button
+                  onPress={handleLogin}
+                >
+                  <ContainerLogin.ButtonText>LOGIN</ContainerLogin.ButtonText>
+                </ContainerLogin.Button>
+              </ContainerLogin.ViewButton>
+            </>
+          )}
+
 
           <ContainerLogin.ViewCadastro>
             <ContainerLogin.TextCadastro>não tem conta?</ContainerLogin.TextCadastro>
