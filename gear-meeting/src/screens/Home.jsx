@@ -29,11 +29,14 @@ const Scroll = styled.View`
   align-items: center;
   justify-content: center;
   z-index: 4;
+  height: 2300px;
 `
 
 const CardViewPaddingTop = styled.View`
+  margin-top: -1100px;
   width: 100%;
-  margin-top: 220px;
+  display: flex;
+  align-items: center;
 `
 
 export default function Home({ navigation }) {
@@ -60,7 +63,7 @@ export default function Home({ navigation }) {
         }
       >
         <HeaderImage source={headerHome} alt='Cars at a parking' />
-        <CustomHeader />        
+        <CustomHeader navigation={navigation}/>        
 
         <ScrollView style={{ zIndex: 3 }}>
           <Scroll>
