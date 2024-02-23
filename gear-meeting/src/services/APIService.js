@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const BASE_URL = process.env.BASE_URL || 'http://localhost';
-export const _PORT = process.env._PORT || 8080;
+export const BASE_URL = 'http://localhost';
+export const _PORT = 8080;
 
 class API {
   static async get(path, callback, token) {
