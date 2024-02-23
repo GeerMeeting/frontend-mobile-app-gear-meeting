@@ -28,9 +28,10 @@ export const AuthProvider = ({ children }) => {
     checkUserToken();
   }, []);
 
-  const signIn = async (token) => {
+  const signIn = async (token, userId) => {
     try {
       await AsyncStorage.setItem('token', token);
+      await AsyncStorage.setItem('userId', userId);
       setUser({ token });
     } catch (error) {
       console.error('Erro ao salvar token:', error);
