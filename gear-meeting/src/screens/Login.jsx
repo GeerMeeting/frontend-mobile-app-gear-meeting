@@ -159,11 +159,13 @@ const Login = ({ navigation }) => {
         return console.log(err);
       }
 
-      const token = data.data.token
-      console.log('TOKEN: ', token)
+      const token = data.data.token;
+      const userId = data.data.userId;
+
+      console.log('token: ', token)
+      console.log('userId: ', userId)
       if (token) {
-        signIn(token)
-        navigation.navigate('PrivateRoutes')
+        signIn(token, userId)
       }
     })
   }
