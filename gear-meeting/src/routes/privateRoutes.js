@@ -10,6 +10,7 @@ import home from '../../assets/home.png'
 import ticket from '../../assets/ticket.png'
 import map from '../../assets/map.png'
 import schedule from '../../assets/schedule.png'
+import User from '../screens/User';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,6 +38,12 @@ const HomeStackScreen = () => (
     <Stack.Screen
       name="Schedule"
       component={Schedule}
+      options={{ headerShown: false }}
+    />
+
+    <Stack.Screen
+      name="User"
+      component={User}
       options={{ headerShown: false }}
     />
   </Stack.Navigator>
