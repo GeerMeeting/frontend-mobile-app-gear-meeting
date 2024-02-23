@@ -75,7 +75,7 @@ Modal.Text = styled.Text`
   font-size: 14px;
 `
 
-export default function CustomHeader() {
+export default function CustomHeader({ navigation }) {
   const [userModal, setUserModal] = useState(false);
   const [image, setImage] = useState(null)
   const { height: windowHeight } = useWindowDimensions();
@@ -109,11 +109,10 @@ export default function CustomHeader() {
 
   const handleLogout = async () => {
     signOut()
-    const token = await AsyncStorage.getItem('token')
+  }
 
-    if(!token) {
-      navigation.na
-    }
+  const handleGoToUserScreen = () => {
+    navigation.navigate('User')
   }
 
   return (
@@ -134,9 +133,9 @@ export default function CustomHeader() {
               }
             >
               <Modal.Button
-                onPress={handleLogout}
+                onPress={handleGoToUserScreen}
               >
-                <Modal.Text>Teste</Modal.Text>
+                <Modal.Text>Minha Conta</Modal.Text>
               </Modal.Button>
 
               <Modal.Button
