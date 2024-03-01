@@ -42,12 +42,19 @@ Card.OpenText = styled.Text`
   color: #17949C;
 `
 
-Card.Image = styled.Image`
+Card.Icon = styled.Image`
   width: 60px;
   height: 60px;
 `
 
-export default function CustomCard({label, description, icon, style, onPress}) {
+Card.Image = styled.Image`
+  width: 151px;
+  height: 135px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+`
+
+export default function CustomCard({label, description, icon, image, style, onPress}) {
   return (
     <Card.View>
       <Card.Label>{label}</Card.Label>
@@ -75,7 +82,8 @@ export default function CustomCard({label, description, icon, style, onPress}) {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
         >
-          <Card.Image source={icon} alt='' />
+          {icon && (<Card.Icon source={icon} alt='' />)}
+          {image && (<Card.Image source={{ uri: image }} alt='' />)}
         </LinearGradient>
       </Card>
     </Card.View>
