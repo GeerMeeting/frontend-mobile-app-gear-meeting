@@ -151,19 +151,16 @@ const Login = ({ navigation }) => {
 
   const { signIn } = useAuth();
 
-  const handleLogin = () => {
-    API.login(email, password, (err, data) => {
+  const handleLogin = async  () => {
+    await API.login(email, password, (err, data) => {
       if (err) {
-        console.log("ERROR2: ", err);
         setLoginError(true)
-        return console.log(err);
+        return console.error(err);
       }
-
+      
       const token = data.data.token;
       const userId = data.data.userId;
 
-      console.log('token: ', token)
-      console.log('userId: ', userId)
       if (token) {
         signIn(token, userId)
       }
