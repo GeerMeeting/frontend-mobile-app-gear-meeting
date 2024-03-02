@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import NavBar from '../components/NavBar'
 import styled from 'styled-components/native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Text } from 'react-native'
+import EventNav from '../components/EventNav'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import API from '../services/APIService'
 
 const TicketCard = styled.View`
   flex: 1;
@@ -15,10 +18,17 @@ const TicketCard = styled.View`
 TicketCard.ViewImage = styled.View`
   width: 100%;
   height: 200px;
-  background-color: lime;
+  background-color: gray;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
   margin-bottom: 10px;
+`
+
+TicketCard.Image = styled.Image`
+  width: 100%;
+  height: 200px;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
 `
 
 TicketCard.Title = styled.Text`
@@ -75,127 +85,100 @@ TicketCard.AddTicket = styled.TouchableOpacity`
 `
 
 export default function Ticket() {
-  const [ticketLote1, setTicketLote1] = useState(0);
-  const [ticketLote2, setTicketLote2] = useState(0);
-  const [ticketLote3, setTicketLote3] = useState(0);
+  const[image, setImage] = useState(null);
+  const [validLotes, setValidLotes] = useState(3);
+  const [ticket, setTicket] = useState(1);
 
-  const handleAddNumber = ({ticket, setTicket}) => {
-    if(setTicket) {
-      if(ticket < 5) {
-        return setTicket((ticket + 1));
-      }
+  useEffect(() => {
+    fetchImage()
+  }, []);
+  
+  const fetchImage = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const userId = await AsyncStorage.getItem('userId');
+      
+      const events = await API.get(`/events`, token)
+      console.log(events.data)
+
+      const response = await API.getImage(`/events/${events.data[0]._id}/photo`, token)
+      const blob = new Blob([response.data]);
+      const imageUrl = URL.createObjectURL(blob);
+      setImage(imageUrl);
+    } catch (e) {
+      console.error(e)
     }
   }
 
-  const handleSubNumber = ({ticket, setTicket}) => {
-    if(setTicket) {
-      if(ticket > 0) {
-        return setTicket((ticket - 1));
-      }
+  const handleAddNumber = () => {
+    if (ticket < 5) {
+      return setTicket((ticket + 1));
+    }
+  }
+
+  const handleSubNumber = () => {
+    if (ticket > 1) {
+      return setTicket((ticket - 1));
     }
   }
 
   return (
     <>
-      <NavBar MainText={"Ingressos"}/>
+      <NavBar MainText={"Ingressos"} />
       <LinearGradient
         colors={['#040D29', '#1400FF']}
         style={{
-          flex: 1, 
+          flex: 1,
           width: '100%',
           padding: 20
         }}
       >
         <TicketCard>
-          <TicketCard.ViewImage></TicketCard.ViewImage>
+          <TicketCard.ViewImage>
+            <TicketCard.Image
+              source={{uri: image}}
+            />
+          </TicketCard.ViewImage>
           <TicketCard.Title>Corrida Track</TicketCard.Title>
           <TicketCard.Description>
             Sábado dia 17/04 ocorrerá o mais inesquecível e épico evento de exposição e show de Drift do Brasil !
             Você vai entrar no verdadeiro mundo de Gearheads, levando toda a história do verdadeiro nome Corrida Track no Japão que foi uma das mais importantes da cena hashiriya japonesa entre 1987 e 1999.
-            Teremos varias atrações no nosso evento, como foodtrucks, lojas de artigos personalizados e automotivos, muito musica, sorteios com varias premiações para vocês, muito Drift! 
+            Teremos varias atrações no nosso evento, como foodtrucks, lojas de artigos personalizados e automotivos, muito musica, sorteios com varias premiações para vocês, muito Drift!
           </TicketCard.Description>
 
           <TicketCard.Tickets>
-            <TicketCard.TicketsView>
+            {validLotes ? (
+              <>
+                <TicketCard.TicketsView>
 
-              <TicketCard.TicketsText>Ingresso Pedestre - 1° lote</TicketCard.TicketsText>
+                  <TicketCard.TicketsText>Ingresso Pedestre - {validLotes}° lote</TicketCard.TicketsText>
 
-              <TicketCard.ViewAddLess>
-                <TicketCard.AddTicket
-                  onPress={() => handleSubNumber({ticket: ticketLote1, setTicket: setTicketLote1})}
-                >
-                  <Text style={{
-                    fontSize: 13,
-                    marginTop: -2
-                  }}>-</Text>
-                </TicketCard.AddTicket>
-                  
-                  <Text style={{marginHorizontal: 5}}>{ticketLote1}</Text>
+                  <TicketCard.ViewAddLess>
+                    <TicketCard.AddTicket
+                      onPress={handleSubNumber}
+                    >
+                      <Text style={{
+                        fontSize: 13,
+                        marginTop: -2
+                      }}>-</Text>
+                    </TicketCard.AddTicket>
 
-                <TicketCard.AddTicket
-                  onPress={() => handleAddNumber({ticket: ticketLote1, setTicket: setTicketLote1})}
-                >
-                  <Text style={{
-                    fontSize: 13,
-                    marginTop: -2
-                  }}>+</Text>
-                </TicketCard.AddTicket>
-              </TicketCard.ViewAddLess>
-            </TicketCard.TicketsView>
-            <TicketCard.TicketsView>
+                    <Text style={{ marginHorizontal: 5 }}>{ticket}</Text>
 
-              <TicketCard.TicketsText>Ingresso Pedestre - 2° lote</TicketCard.TicketsText>
-
-              <TicketCard.ViewAddLess>
-                <TicketCard.AddTicket
-                  onPress={() => handleSubNumber({ticket: ticketLote2, setTicket: setTicketLote2})}
-                >
-                  <Text style={{
-                    fontSize: 13,
-                    marginTop: -2
-                  }}>-</Text>
-                </TicketCard.AddTicket>
-                  
-                  <Text style={{marginHorizontal: 5}}>{ticketLote2}</Text>
-
-                <TicketCard.AddTicket
-                  onPress={() => handleAddNumber({ticket: ticketLote2, setTicket: setTicketLote2})}
-                >
-                  <Text style={{
-                    fontSize: 13,
-                    marginTop: -2
-                  }}>+</Text>
-                </TicketCard.AddTicket>
-              </TicketCard.ViewAddLess>
-
-            </TicketCard.TicketsView>
-
-            <TicketCard.TicketsView>
-
-              <TicketCard.TicketsText>Ingresso Pedestre - 3° lote</TicketCard.TicketsText>
-
-              <TicketCard.ViewAddLess>
-                <TicketCard.AddTicket
-                  onPress={() => handleSubNumber({ticket: ticketLote3, setTicket: setTicketLote3})}
-                >
-                  <Text style={{
-                    fontSize: 13,
-                    marginTop: -2
-                  }}>-</Text>
-                </TicketCard.AddTicket>
-                  
-                  <Text style={{marginHorizontal: 5}}>{ticketLote3}</Text>
-
-                <TicketCard.AddTicket
-                  onPress={() => handleAddNumber({ticket: ticketLote3, setTicket: setTicketLote3})}
-                >
-                  <Text style={{
-                    fontSize: 13,
-                    marginTop: -2
-                  }}>+</Text>
-                </TicketCard.AddTicket>
-              </TicketCard.ViewAddLess>
-            </TicketCard.TicketsView>
+                    <TicketCard.AddTicket
+                      onPress={handleAddNumber}
+                    >
+                      <Text style={{
+                        fontSize: 13,
+                        marginTop: -2
+                      }}>+</Text>
+                    </TicketCard.AddTicket>
+                  </TicketCard.ViewAddLess>
+                </TicketCard.TicketsView>
+              </>
+            ) : (
+              <></>
+            )}
           </TicketCard.Tickets>
         </TicketCard>
       </LinearGradient>
