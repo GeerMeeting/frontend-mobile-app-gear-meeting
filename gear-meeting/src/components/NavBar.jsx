@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
-import { Image, useWindowDimensions } from 'react-native'
+import { Image } from 'react-native'
 import styled from 'styled-components/native'
 import menu from '../../assets/menu.png'
-import user from '../../assets/person.png'
 import { useAuth } from '../hooks/AuthProvider'
+import ModalSettings from './ModalSettings'
+import User from './User'
 
 const SafeAreaView = styled.View`
   width: 100%;
@@ -17,6 +18,7 @@ const ViewNavBar = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 `
 
 ViewNavBar.MenuButton = styled.TouchableOpacity`
@@ -77,10 +79,8 @@ Modal.Text = styled.Text`
   font-size: 14px;
 `
 
-export default function NavBar({MainText}) {
-  const [image, setImage] = useState(null);
+export default function NavBar({navigation, MainText, showOff=false}) {
   const [menuModal, setMenuModal] = useState(false);
-  const { height: windowHeight } = useWindowDimensions();
   const { signOut } = useAuth();
 
   const openMenuModal = () => {
@@ -95,44 +95,19 @@ export default function NavBar({MainText}) {
     signOut()
   }
 
+  const handleHome = () => {
+    navigation.navigate('Home');
+  }
+
   return (
     <>
     {menuModal === true ? (
           <>
-            <Modal.Background windowHeight={windowHeight}>
-              <LinearGradient
-                colors={['#000', '#040D29']}
-                style={
-                  {
-                    width: 200,
-                    left: 5,
-                    top: 52,
-                    borderRadius: 10,
-                    padding: 10,
-                    position: 'absolute',
-                    zIndex: 4
-                  }
-                }
-              >
-                <Modal.Button
-
-                >
-                  <Modal.Text>Teste</Modal.Text>
-                </Modal.Button>
-
-                <Modal.Button
-                  onPress={handleLogout}
-                >
-                  <Modal.Text>Logout</Modal.Text>
-                </Modal.Button>
-
-                <Modal.Button
-                  onPress={closeMenuModal}
-                >
-                  <Modal.Text>Fechar</Modal.Text>
-                </Modal.Button>
-              </LinearGradient>
-            </Modal.Background >
+            <ModalSettings 
+              logout={handleLogout}
+              closeModal={closeMenuModal}
+              left={true}
+            />
           </>
         ) : null}
       <SafeAreaView />
@@ -146,22 +121,36 @@ export default function NavBar({MainText}) {
           justifyContent: 'center'
         }}
       >
-        
-        <ViewNavBar>
-          <ViewNavBar.MenuButton onPress={openMenuModal}>
-            <Image source={menu} alt='menu icon'/>
-          </ViewNavBar.MenuButton>
+        {showOff ? (
+          <ViewNavBar style={{justifyContent: 'center'}}>
+            {showOff ? null : (
+              <ViewNavBar.MenuButton onPress={openMenuModal}>
+                <Image source={menu} alt='menu icon'/>
+              </ViewNavBar.MenuButton>
+            )}
+
+            <ViewNavBar.MainText>{MainText.toUpperCase()}</ViewNavBar.MainText>
+
+            {showOff ? null : (
+              <User />
+            )}
+          </ViewNavBar>
+        ): (
+          <ViewNavBar>
+          {showOff ? null : (
+            <ViewNavBar.MenuButton onPress={openMenuModal}>
+              <Image source={menu} alt='menu icon'/>
+            </ViewNavBar.MenuButton>
+          )}
 
           <ViewNavBar.MainText>{MainText.toUpperCase()}</ViewNavBar.MainText>
 
-          <UserView>
-            {image ? (
-              <UserImage source={{ uri: URL.createObjectURL(image) }} alt='User image' />
-            ) : (
-              <UserImage source={user} alt='User image' />
-            )}
-          </UserView>
+          {showOff ? null : (
+            <User />
+          )}
         </ViewNavBar>
+        )}
+        
       </LinearGradient>
     </>
   )
