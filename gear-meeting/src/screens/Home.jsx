@@ -6,6 +6,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import ticket from '../../assets/ticket.png'
 import maps from '../../assets/googlemaps.png'
 import cars from '../../assets/carrosEPilotos.png'
+import schedule from '../../assets/schedule.png'
+import foodtruck from '../../assets/foodtruck.png'
+import poll from '../../assets/poll.png'
+import voltarapida from '../../assets/voltarapida.png'
 import CustomCard from '../components/Card';
 import CustomHeader from '../components/Header';
 
@@ -29,23 +33,28 @@ const Scroll = styled.View`
   align-items: center;
   justify-content: center;
   z-index: 4;
-  height: 2300px;
+  height: 2400px;
 `
 
 const CardViewPaddingTop = styled.View`
-  margin-top: -1100px;
+  margin-top: -620px;
   width: 100%;
   display: flex;
   align-items: center;
 `
 
 export default function Home({ navigation }) {
+
   const handleGoToTicketScreen = () => {
     navigation.navigate('Ticket')
   }
 
   const handleGoToMapsScreen = () => {
     navigation.navigate('Map')
+  }
+
+  const handleGoToPilots = () => {
+    navigation.navigate('Pilots')
   }
 
   return (
@@ -63,7 +72,7 @@ export default function Home({ navigation }) {
         }
       >
         <HeaderImage source={headerHome} alt='Cars at a parking' />
-        <CustomHeader navigation={navigation}/>        
+        <CustomHeader navigation={navigation} />        
 
         <ScrollView style={{ zIndex: 3 }}>
           <Scroll>
@@ -82,15 +91,32 @@ export default function Home({ navigation }) {
               icon={maps}
             />
             <CustomCard 
+              label={'Cronograma'}
+              description={'Compre o seu ingresso com facilidade e praticidade'}
+              icon={schedule}
+            />
+            <CustomCard 
               label={'Carros e Pilotos'}
               description={'Compre o seu ingresso com facilidade e praticidade'}
               icon={cars}
+              onPress={handleGoToPilots}
             />
             <CustomCard 
-              label={'Ingressos'}
+              label={'O que comer'}
               description={'Compre o seu ingresso com facilidade e praticidade'}
-              icon={ticket}
+              icon={foodtruck}
             />
+            <CustomCard 
+              label={'Votação'}
+              description={'Compre o seu ingresso com facilidade e praticidade'}
+              icon={poll}
+            />
+            <CustomCard 
+              label={'Volta Rápida'}
+              description={'Compre o seu ingresso com facilidade e praticidade'}
+              icon={voltarapida}
+            />
+
           </Scroll>
         </ScrollView>
       </LinearGradient>
